@@ -20,4 +20,6 @@ public:
     std::vector<std::string> get_masks() const {return masks_;}
 
     std::vector<std::filesystem::path> scan_files() const;
+
+    void print_n_records(size_t n);
 };
