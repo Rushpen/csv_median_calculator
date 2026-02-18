@@ -12,11 +12,12 @@ private:
     std::string filename_;
     std::ifstream file_;
     std::vector<std::string> headers_; //заголовки в csv файле
+    std::vector<std::vector<std::string>> rows_;
     int line_number_ = 0;
     bool is_open_ = false; //флаг факта открытия файла
     
     std::vector<std::string> split(const std::string& str, char delimiter);
-    
+
 public:
     explicit csv_reader(const std::string& filename); //конструктор
     ~csv_reader();

@@ -61,7 +61,8 @@ std::optional<std::vector<std::string>> csv_reader::read_next_row() {
     while (std::getline(file_, line)) {
         line_number_++;
 
-        if (line.empty()) {
+        //Продолжаем считывать если пустая строка в середине файла
+        if (line.empty()) { 
             continue;
         }
         
