@@ -1,14 +1,20 @@
-#include <queue>
-#include <string>
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics.hpp>
+
+
+//sudo apt-get install libboost-all-dev
 
 class median_calculator {
     private:
-        // Куча хранения значений <= медианы
-        std::priority_queue<double> lower_heap_;
-        // Куча для хранения значений > медианы(используем шаблон priority_queue)
-        std::priority_queue<double, std::vector<double>, std::greater<double>> upper_heap_;
+        boost::accumulators::accumulator_set<
+        double, boost::accumulators::stats<boost::accumulators::tag::median>> median_accumulator_;
+
+        double last_median_ = 0;
+        bool is_first_ = true;
 
     public:
-        void add_to_heap(double value);
-        double calculate_median();
+        median_calculator();
+        void add_price(double price);
+        double get_median();
+        bool has_median_changed(double current_median);
 };
