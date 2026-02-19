@@ -15,7 +15,7 @@ bool csv_writer::file_open() {
         return false;
     }
     
-    // Записываем заголовок
+    // Записываем заголовок csv
     file_ << "receive_ts;price_median\n";
     file_is_open_ = true;
     return true;
@@ -31,10 +31,10 @@ void csv_writer::file_close() {
 void csv_writer::write_median_to_csv(uint64_t timestamp, double median) {
     if (!file_.is_open()) return;
     
-    // Форматируем с нужной точностью
+    // Запись строки с результатом
     file_ << timestamp << ";"
           << std::fixed << std::setprecision(8) << median << "\n";
-    file_.flush();  // сразу записываем на диск
+    file_.flush();  // Сразу записываем на диск
     
     last_median_ = median;
 }

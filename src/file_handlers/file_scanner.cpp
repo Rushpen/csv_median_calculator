@@ -18,6 +18,7 @@ std::string file_scanner::to_lowercase(const std::string& str) const {
 }
 
 bool file_scanner::matches_mask(const std::string& filename) const {
+    // Если маски не заданы, подходят все файлы
     if (masks_.empty()) {
         return true;
     }
@@ -34,6 +35,7 @@ bool file_scanner::matches_mask(const std::string& filename) const {
 std::vector<std::filesystem::path> file_scanner::scan_files() const {
     std::vector<std::filesystem::path> result;
 
+    // Проверка существования директории
     if (!std::filesystem::exists(directory_) 
         || !std::filesystem::is_directory(directory_)) {
         spdlog::error("Ошибка: директория {} не существует или ею не является",
@@ -45,7 +47,8 @@ std::vector<std::filesystem::path> file_scanner::scan_files() const {
         for (const auto& entry : 
             std::filesystem::directory_iterator(directory_)) {
     
-        if (!entry.is_regular_file()) continue; //Проверка файл ли это вообще
+        // Пропускаем не-файлы
+        if (!entry.is_regular_file()) continue;
         
         // Рассматриваем только файлы с расширением .csv
         if (entry.path().extension() != ".csv") continue; 

@@ -6,7 +6,7 @@ median_calculator::median_calculator() :
 median_calculator::~median_calculator() = default;
 
 void median_calculator::add_price(double price) {
-    median_accumulator_(price);
+    median_accumulator_(price); // Добавляем цену в аккумулятор
 }
     
 double median_calculator::get_median() {
@@ -14,6 +14,7 @@ double median_calculator::get_median() {
 }
     
 bool median_calculator::has_median_changed(double current_median) {
+    // Если первое добавление или медиана изменилась
     if (is_first_ || current_median != last_median_) {
         last_median_ = current_median;
         is_first_ = false;

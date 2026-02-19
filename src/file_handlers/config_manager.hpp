@@ -5,6 +5,9 @@
 #include <toml++/toml.h>
 #include "spdlog/spdlog.h"
 
+/**
+ * \brief Структура с настройками приложения из TOML-файла
+ */
 struct app_config {
     std::string input_dir_;                 // Путь к папке с входными CSV
     std::string output_dir_;                 // Путь для выходных файлов
@@ -12,11 +15,19 @@ struct app_config {
     bool output_dir_created = false;        // Флаг создания выходной папки
 };
 
+/**
+ * \brief Результат парсинга командной строки
+ */
 struct cmd_arguments {
     std::string config_file;
     bool error = false;
 };
 
+/**
+ * \brief Класс для управления конфигурацией приложения
+ * \details Объединяет парсинг аргументов командной строки,
+ *          чтение TOML-файла и валидацию путей.
+ */
 class config_manager {
 private:
     cmd_arguments cmd_;
@@ -31,6 +42,9 @@ public:
     config_manager();
     ~config_manager();
 
+    /**
+     * \brief Загружает конфигурацию из аргументов и TOML-файла
+     */
     bool load_configuration(int argc, char* argv[]);
     
     std::string get_usage() const { 

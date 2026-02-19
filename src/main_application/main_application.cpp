@@ -4,7 +4,7 @@ main_application::main_application() = default;
 main_application::~main_application() = default;
 
 bool main_application::initialize(int argc, char* argv[]) {
-    // Загружаем конфигурацию
+    // Настройка логирования
     spdlog::set_level(spdlog::level::trace);
     spdlog::flush_on(spdlog::level::trace);
     spdlog::info("Логирование настроено на уровень TRACE");
@@ -20,7 +20,7 @@ bool main_application::initialize(int argc, char* argv[]) {
         return false;
     }
     
-    // Выводим настройки
+    // Вывод настроек для отладки
     spdlog::info("Входная директория: {}", config_->get_input_dir());
     spdlog::info("Выходная директория: {}", config_->get_output_dir());
     
@@ -45,7 +45,7 @@ bool main_application::initialize(int argc, char* argv[]) {
 }
 
 bool main_application::scan_and_read_files() {
-    // Сканируем файлы
+    // Поиск всех CSV-файлов по маскам
     file_scanner scanner(config_->get_input_dir(),
         config_->get_filename_masks());
     auto files = scanner.scan_files();
@@ -60,7 +60,7 @@ bool main_application::scan_and_read_files() {
         spdlog::info("  - {}", file.filename().string());
     }
     
-    // Читаем каждый файл
+    // Чтение каждого файла
     for (const auto& file : files) {
         spdlog::info("Считывание файла: {}", file.filename().string());
         
@@ -101,7 +101,7 @@ bool main_application::scan_and_read_files() {
         reader.file_close();
     }
     
-    // Сортируем записи по времени
+    // Подготовка данных к обработке
     data_->sort_by_timestamp();
     spdlog::info("Прочитано записей: {}", data_->size());
     

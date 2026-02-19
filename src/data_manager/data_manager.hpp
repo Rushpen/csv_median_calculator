@@ -17,9 +17,18 @@ private:
 public:
     data_manager();
     ~data_manager();
+    /**
+     * \brief Добавляет новую запись
+     * \param ts_ временная метка
+     * \param price_ цена
+     */
     void add_record(uint64_t ts, double price);
     
+    /**
+     * \brief Сортирует все записи по времени
+     */
     void sort_by_timestamp();
+
     const std::vector<list_trades>& get_records() const { 
         return records_; 
     }

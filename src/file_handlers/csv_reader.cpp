@@ -20,6 +20,7 @@ bool csv_reader::file_open() {
         return false;
     }
     
+    // Чтение заголовка
     std::string header_line;
     if (std::getline(file_, header_line)) {
         headers_ = split(header_line, ';');

@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "spdlog/spdlog.h"
-// sudo apt-get install libspdlog-dev
 
 #include "../file_handlers/config_manager.hpp"
 #include "../file_handlers/file_scanner.hpp"
@@ -14,6 +13,10 @@
 #include "../data_manager/data_manager.hpp"
 #include "../median_calculator/median_calculator.hpp"
 
+/**
+ * \brief Главный класс приложения
+ * \details Объединяет все компоненты: конфиг, данные, калькулятор, запись
+ */
 class main_application {
 private:
     std::unique_ptr<class config_manager> config_;
@@ -29,5 +32,12 @@ private:
 public:
     main_application();
     ~main_application();
+
+    /**
+     * \brief Запускает приложение
+     * \param argc аргументы командной строки
+     * \param argv аргументы командной строки
+     * \return 0 при успехе, код ошибки иначе
+     */
     int run(int argc, char* argv[]);
 };

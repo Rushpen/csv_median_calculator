@@ -1,7 +1,6 @@
 #include "data_manager.hpp"
 
 data_manager:: data_manager() = default;
-
 data_manager::~data_manager() = default;
 
 void data_manager::add_record(uint64_t ts, double price) {

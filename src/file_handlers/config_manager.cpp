@@ -20,8 +20,7 @@ bool config_manager::parse_command_line(int argc, char* argv[]) {
         boost::program_options::store(boost::program_options::
             parse_command_line(argc, argv, desc), vm);
         
-        // Указали конфиг в строке - используем его
-
+        // Определяем, какой флаг использован
         if (vm.count("config")) {
             cmd_.config_file = vm["config"].as<std::string>();
         } else if (vm.count("cfg")) {
@@ -37,7 +36,7 @@ bool config_manager::parse_command_line(int argc, char* argv[]) {
                         cmd_.config_file);
         }
         
-        // Проверяем, существует ли файл
+        // Проверяем существует ли файл
         if (!std::filesystem::exists(cmd_.config_file)) {
             spdlog::warn("Предупреждение: Файл конфигурации не найден: {}", 
                 cmd_.config_file);
@@ -57,6 +56,7 @@ bool config_manager::parse_toml_file(const std::string& filename) {
         
         auto main = toml["main"];
         
+        // Обязательный параметр input
         auto input = main["input"].value<std::string>();
         if (!input) {
             spdlog::error("Ошибка: в TOML не указан 'input'");
@@ -64,6 +64,7 @@ bool config_manager::parse_toml_file(const std::string& filename) {
         }
         config_.input_dir_ = *input;
         
+        // Опциональный параметр output
         auto output = main["output"].value<std::string>();
         if (output) {
             config_.output_dir_ = *output;
@@ -72,6 +73,7 @@ bool config_manager::parse_toml_file(const std::string& filename) {
             config_.output_dir_ = "./output";
         }
         
+        // Опциональные маски файлов
         if (auto masks = main["filename_mask"].as_array()) {
             for (auto&& elem : *masks) {
                 if (auto mask = elem.value<std::string>()) {
@@ -91,6 +93,7 @@ bool config_manager::parse_toml_file(const std::string& filename) {
 
 bool config_manager::validate_and_create_output_dir() {
     try {
+        // Проверка входной директории
         if (!std::filesystem::exists(config_.input_dir_)) {
             spdlog::error("Ошибка: Входная директория не существует: {}",
                 config_.input_dir_);
