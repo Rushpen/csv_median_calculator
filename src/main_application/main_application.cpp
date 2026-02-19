@@ -35,11 +35,18 @@ bool main_application::initialize(int argc, char* argv[]) {
     // Создаём остальные объекты
     data_ = std::make_unique<data_manager>();
     calculator_ = std::make_unique<median_calculator>();
+
+    // Новый калькулятор для всех метрик (кроме квантилей)
+    calculator_metrics_ = std::make_unique<metrics_calculator>();
     
     // Создаём writer с путём из конфига
-    std::string output_path = config_->get_output_dir() 
+    std::string output_median_path = config_->get_output_dir() 
         + "/median_results.csv";
-    writer_ = std::make_unique<csv_writer>(output_path);
+    median_writer_ = std::make_unique<csv_writer>(output_median_path);
+
+    std::string output_metrics_path = config_->get_output_dir() 
+        + "/metrics_results.csv";
+    metrics_writer_ = std::make_unique<csv_writer>(output_metrics_path);
     
     return true;
 }
@@ -109,28 +116,39 @@ bool main_application::scan_and_read_files() {
 }
 
 bool main_application::calculate_and_write_results() {
-    if (!writer_->file_open()) {
-        spdlog::error("Ошибка: Не удалось создать выходной файл");
+    if (!median_writer_->file_open() || !metrics_writer_->file_open()) {
+        spdlog::error("Ошибка: Не удалось создать выходные файлы");
         return false;
     }
     
-    // Вычисление медианы
+    // Вычисление медианы и других метрик
     const auto& records = data_->get_records();
     int changes_count = 0;
     
     for (const auto& record : records) {
         calculator_->add_price(record.price);
+        calculator_metrics_->add_value(record.price);
         double current_median = calculator_->get_median();
         
         if (calculator_->has_median_changed(current_median)) {
-            writer_->write_median_to_csv(record.timestamp, current_median);
+            median_writer_->write_median_to_csv(record.timestamp,
+                current_median);
+            
+            all_metrics["median"] = calculator_metrics_->get_median();
+            all_metrics["mean"] = calculator_metrics_->get_mean();
+            all_metrics["stddev"] = calculator_metrics_->get_stddev();
+            all_metrics["min"] = calculator_metrics_->get_min();
+            all_metrics["max"] = calculator_metrics_->get_max();
+
+            metrics_writer_->write_metrics(record.timestamp, all_metrics);
             changes_count++;
         }
     }
     
     spdlog::info("Изменений медианы(кол.-во): {}", changes_count);
     
-    writer_->file_close();
+    median_writer_->file_close();
+    metrics_writer_->file_close();
     return true;
 }
 
@@ -143,9 +161,11 @@ void main_application::print_statistics() const {
     spdlog::info("Статистика:");
     spdlog::debug("  Первая запись: ts={}, price={}",
         records.front().timestamp, records.front().price);
+        
     spdlog::debug("  Последняя запись: ts={}, price={}",
         records.back().timestamp, records.back().price);
     
+
     spdlog::debug("Результат сохранён в: {} /median_results.csv",
         config_->get_output_dir());
 }

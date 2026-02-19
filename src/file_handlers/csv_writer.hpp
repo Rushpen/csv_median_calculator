@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <iostream>
 #include <iomanip>
+#include <map>
 #include "spdlog/spdlog.h"
 
 /**
@@ -28,6 +29,14 @@ public:
      * \param median значение медианы
      */
     void write_median_to_csv(uint64_t timestamp, double median);
+
+    /**
+     * \brief Записывает несколько метрик (расширенная версия)
+     * \param timestamp временная метка
+     * \param metrics словарь с метриками {имя: значение}
+     */
+    void write_metrics(uint64_t timestamp, 
+                       const std::map<std::string, double>& metrics);
     
     bool file_is_open() const { 
         return file_is_open_; 

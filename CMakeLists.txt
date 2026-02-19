@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
     src/file_handlers/file_scanner.cpp
     src/data_manager/data_manager.cpp
     src/median_calculator/median_calculator.cpp
+    src/metrics_calculator/metrics_calculator.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

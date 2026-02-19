@@ -38,3 +38,39 @@ void csv_writer::write_median_to_csv(uint64_t timestamp, double median) {
     
     last_median_ = median;
 }
+
+void csv_writer::write_metrics(uint64_t timestamp, 
+    const std::map<std::string, double>& metrics) {
+    if (!file_.is_open()) return;
+
+    // Заголовок (пишем один раз)
+    static bool header_written = false;
+    
+    // Записываем заголовок только один раз
+    if (!header_written) {
+        file_ << "timestamp";
+
+        // Перебираем все метрики из словаря
+        for (auto pair = metrics.begin(); 
+            pair != metrics.end(); ++pair) {
+            std::string metric_name = pair->first;
+            file_ << ";" << metric_name;
+        }
+
+        file_ << "\n";
+        header_written = true;
+    }
+    
+    // Записываем данные
+    file_ << timestamp;
+
+    // Перебираем все метрики снова, но теперь берём значения
+    for (auto pair = metrics.begin(); 
+        pair != metrics.end(); ++pair) {
+        double metric_value = pair->second;  // значение метрики
+        file_ << ";" << std::fixed << std::setprecision(8) << metric_value;
+    }
+
+    file_ << "\n";
+    file_.flush();
+}

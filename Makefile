@@ -38,7 +38,7 @@ run: fast
 
 #Проверка на утечки
 valgrind:
-	valgrind --leak-check=full ./build/csv_median_calculator -c ./config.toml
+	valgrind --leak-check=full ./build/csv_median_calculator --cfg ./config.toml
 
 addressSanitizer:
 	@echo "Сборка происходит с addressSanitizer:"

@@ -12,6 +12,7 @@
 #include "../file_handlers/csv_writer.hpp"
 #include "../data_manager/data_manager.hpp"
 #include "../median_calculator/median_calculator.hpp"
+#include "../metrics_calculator/metrics_calculator.hpp"
 
 /**
  * \brief Главный класс приложения
@@ -22,7 +23,9 @@ private:
     std::unique_ptr<class config_manager> config_;
     std::unique_ptr<class data_manager> data_;
     std::unique_ptr<class median_calculator> calculator_;
-    std::unique_ptr<class csv_writer> writer_;
+    std::unique_ptr<class metrics_calculator> calculator_metrics_;
+    std::unique_ptr<class csv_writer> metrics_writer_;
+    std::unique_ptr<class csv_writer> median_writer_;
     
     bool initialize(int argc, char* argv[]);
     bool scan_and_read_files();
@@ -32,6 +35,7 @@ private:
 public:
     main_application();
     ~main_application();
+    std::map<std::string, double> all_metrics;
 
     /**
      * \brief Запускает приложение
