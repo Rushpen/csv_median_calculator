@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <algorithm>
 #include <iostream>
+#include "spdlog/spdlog.h"
 
 class file_scanner {
 private:
@@ -16,11 +17,16 @@ private:
 public:
     file_scanner(const std::string& directory, 
         const std::vector<std::string>& masks);
+    
+    ~file_scanner();
 
-    std::string get_directory() const {return directory_;}
-    std::vector<std::string> get_masks() const {return masks_;}
+    std::string get_directory() const {
+        return directory_;
+    }
+    
+    std::vector<std::string> get_masks() const {
+        return masks_;
+    }
 
     std::vector<std::filesystem::path> scan_files() const;
-
-    void print_n_records(size_t n);
 };

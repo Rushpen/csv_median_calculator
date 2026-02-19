@@ -15,6 +15,8 @@ class median_calculator {
 
     public:
         median_calculator();
+        ~median_calculator();
+
         void add_price(double price);
         double get_median();
         bool has_median_changed(double current_median);

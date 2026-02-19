@@ -1,5 +1,8 @@
 #include "config_manager.hpp"
 
+config_manager::config_manager() = default;
+config_manager::~config_manager() = default;
+
 bool config_manager::parse_command_line(int argc, char* argv[]) {
     try {
         boost::program_options::options_description desc("Использование");
@@ -17,7 +20,7 @@ bool config_manager::parse_command_line(int argc, char* argv[]) {
         return true;
         
     } catch (const boost::program_options::error& e) {
-        std::cerr << "Ошибка парсинга аргументов: " << e.what() << std::endl;
+        spdlog::error("Ошибка парсинга аргументов: {}", e.what());
         cmd_.error = true;
         return false;
     }
@@ -31,22 +34,23 @@ bool config_manager::parse_toml_file(const std::string& filename) {
         
         auto input = main["input"].value<std::string>();
         if (!input) {
-            std::cerr << "Ошибка: в TOML не указан 'input'" << std::endl;
+            spdlog::error("Ошибка: в TOML не указан 'input'");
             return false;
         }
-        config_.input_dir = *input;
+        config_.input_dir_ = *input;
         
         auto output = main["output"].value<std::string>();
         if (output) {
-            config_.output_dir = *output;
+            config_.output_dir_ = *output;
         } else {
-            config_.output_dir = "./output";
+            spdlog::warn("Предупреждение: в TOML не указан 'output'");
+            config_.output_dir_ = "./output";
         }
         
         if (auto masks = main["filename_mask"].as_array()) {
             for (auto&& elem : *masks) {
                 if (auto mask = elem.value<std::string>()) {
-                    config_.filename_masks.push_back(*mask);
+                    config_.filename_masks_.push_back(*mask);
                 }
             }
         }
@@ -54,43 +58,42 @@ bool config_manager::parse_toml_file(const std::string& filename) {
         return true;
         
     } catch (const toml::parse_error& error) {
-        std::cerr << "Ошибка парсинга TOML: " <<
-            error.description() << std::endl;
+        spdlog::error("Ошибка парсинга TOML: {}", error.description());
         return false;
     }
 }
 
 bool config_manager::validate_and_create_output_dir() {
     try {
-        if (!std::filesystem::exists(config_.input_dir)) {
-            std::cerr << "Входная директория не существует: " 
-                      << config_.input_dir << std::endl;
+        if (!std::filesystem::exists(config_.input_dir_)) {
+            spdlog::error("Входная директория не существует: {}",
+                config_.input_dir_);
             return false;
         }
         
-        if (!std::filesystem::is_directory(config_.input_dir)) {
-            std::cerr << "Указанный путь не является директорией: " 
-                      << config_.input_dir << std::endl;
+        if (!std::filesystem::is_directory(config_.input_dir_)) {
+            spdlog::error("Указанный путь не является директорией: ",
+                config_.input_dir_);
             return false;
         }
         
         // Создаём выходную директорию, если нужно
-        if (!std::filesystem::exists(config_.output_dir)) {
-            if (std::filesystem::create_directories(config_.output_dir)) {
+        if (!std::filesystem::exists(config_.output_dir_)) {
+            if (std::filesystem::create_directories(config_.output_dir_)) {
                 config_.output_dir_created = true;
-                std::cout << "Создана выходная директория: " 
-                          << config_.output_dir << std::endl;
+                spdlog::info("Создана выходная директория: {}", 
+                    config_.output_dir_);
             } else {
-                std::cerr << "Не удалось создать выходную директорию: " 
-                          << config_.output_dir << std::endl;
+                spdlog::error("Не удалось создать выходную директорию: ",
+                    config_.output_dir_);
                 return false;
             }
         }
         
         return true;
         
-    } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Ошибка файловой системы: " << e.what() << std::endl;
+    } catch (const std::filesystem::filesystem_error& error) {
+        spdlog::error("Ошибка файловой системы: {}", error.what());
         return false;
     }
 }

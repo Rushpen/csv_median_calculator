@@ -13,6 +13,9 @@ fast:
 run: fast
 	@./build/csv_median_calculator -c ./config.toml
 
+valgrind:
+	valgrind --leak-check=full ./build/csv_median_calculator -c ./config.toml
+
 # Очистка
 clean:
 	@rm -rf build

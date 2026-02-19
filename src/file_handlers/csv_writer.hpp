@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <iostream>
 #include <iomanip>
+#include "spdlog/spdlog.h"
 
 //sudo apt install libtomlplusplus-dev
 class csv_writer {
@@ -24,6 +25,7 @@ public:
     bool file_is_open() const { 
         return file_is_open_; 
     }
+    
     double get_last_median() const { 
         return last_median_; 
     }

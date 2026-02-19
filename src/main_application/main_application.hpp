@@ -4,6 +4,9 @@
 #include <string>
 #include <memory>
 
+#include "spdlog/spdlog.h"
+// sudo apt-get install libspdlog-dev
+
 #include "../file_handlers/config_manager.hpp"
 #include "../file_handlers/file_scanner.hpp"
 #include "../file_handlers/csv_reader.hpp"

@@ -14,8 +14,7 @@ bool csv_reader::file_open() {
     
     file_.open(filename_);
     if (!file_.is_open()) {
-        std::cerr << "Error: problem with opening the file " <<
-            filename_ << std::endl;
+        spdlog::error("Ошибка: проблема при попытке открытия файла {}", filename_);
         is_open_ = false;
         return false;
     }
@@ -25,7 +24,7 @@ bool csv_reader::file_open() {
         headers_ = split(header_line, ';');
         line_number_ = 1;  // заголовок — строка 1
     } else {
-        std::cerr << "Error: file is empty or not have header" << std::endl;
+        spdlog::error("Ошибка: файл пустой или не имеет заголовков");
         file_.close();
         is_open_ = false;
         return false;

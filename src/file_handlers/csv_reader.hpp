@@ -6,6 +6,7 @@
 #include <sstream>
 #include <filesystem>
 #include <algorithm>
+#include "spdlog/spdlog.h"
 
 class csv_reader {
 private:

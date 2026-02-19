@@ -12,6 +12,8 @@ find_package(Boost 1.74 REQUIRED COMPONENTS
     system
 )
 
+find_package(spdlog REQUIRED)
+
 FetchContent_Declare(
     tomlplusplus
     GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
@@ -39,6 +41,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Boost::program_options
     Boost::system
+    spdlog::spdlog
 )
 
 configure_file(
