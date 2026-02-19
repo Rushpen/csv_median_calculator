@@ -3,7 +3,7 @@
 input = "./examples/input"
 
 # Путь для выходных файлов (опционально)
-output = "./results"
+output = "./output"
 
 # Список масок для фильтрации файлов
 filename_mask = ["level", "trade"]
