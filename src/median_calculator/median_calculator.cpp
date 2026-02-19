@@ -1,6 +1,7 @@
 #include "median_calculator.hpp"
 
-median_calculator::median_calculator() : last_median_(0.0), is_first_(true) {}
+median_calculator::median_calculator() :
+    last_median_(0.0), is_first_(true) {}
 
 void median_calculator::add_price(double price) {
     median_accumulator_(price);

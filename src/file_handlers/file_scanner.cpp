@@ -36,7 +36,8 @@ std::vector<std::filesystem::path> file_scanner::scan_files() const {
     }
 
     try {
-        for (const auto& entry : std::filesystem::directory_iterator(directory_)) {
+        for (const auto& entry : 
+            std::filesystem::directory_iterator(directory_)) {
     
         if (!entry.is_regular_file()) continue; //Проверка файл ли это вообще
         
@@ -46,7 +47,7 @@ std::vector<std::filesystem::path> file_scanner::scan_files() const {
         if (matches_mask(entry.path().filename().string())) {
             result.push_back(entry.path());
         }
-    }
+        }
     }
 
     catch(const std::filesystem::filesystem_error& error) {

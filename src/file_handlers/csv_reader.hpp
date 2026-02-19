@@ -25,11 +25,17 @@ public:
     bool file_open();
     void file_close();
     
-    bool file_is_open() const { return is_open_; }
+    bool file_is_open() const { 
+        return is_open_; 
+    }
     
-    const std::vector<std::string>& get_headers() const { return headers_; }
+    const std::vector<std::string>& get_headers() const { 
+        return headers_; 
+    }
 
     std::optional<std::vector<std::string>> read_next_row();
     std::vector<std::vector<std::string>> read_all_rows();
-    int get_line_number() const { return line_number_; }
+    int get_line_number() const { 
+        return line_number_; 
+    }
 };

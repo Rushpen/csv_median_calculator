@@ -7,7 +7,8 @@
 class median_calculator {
     private:
         boost::accumulators::accumulator_set<
-        double, boost::accumulators::stats<boost::accumulators::tag::median>> median_accumulator_;
+        double, boost::accumulators::stats<boost::accumulators::
+            tag::median>> median_accumulator_;
 
         double last_median_ = 0;
         bool is_first_ = true;

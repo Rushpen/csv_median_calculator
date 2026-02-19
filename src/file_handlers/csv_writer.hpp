@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 
+//sudo apt install libtomlplusplus-dev
 class csv_writer {
 private:
     std::string filename_;
@@ -20,7 +21,11 @@ public:
 
     void write_median_to_csv(uint64_t timestamp, double median);
     
-    bool file_is_open() const { return file_is_open_; }
-    double get_last_median() const { return last_median_; }
+    bool file_is_open() const { 
+        return file_is_open_; 
+    }
+    double get_last_median() const { 
+        return last_median_; 
+    }
 
 };

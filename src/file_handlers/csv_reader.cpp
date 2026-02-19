@@ -1,6 +1,7 @@
 #include "csv_reader.hpp"
 
-csv_reader::csv_reader(const std::string& filename) : filename_(filename) {}
+csv_reader::csv_reader(const std::string& filename) :
+    filename_(filename) {}
 
 csv_reader::~csv_reader() {
     file_close();
@@ -13,7 +14,8 @@ bool csv_reader::file_open() {
     
     file_.open(filename_);
     if (!file_.is_open()) {
-        std::cerr << "Error: problem with opening the file " << filename_ << std::endl;
+        std::cerr << "Error: problem with opening the file " <<
+            filename_ << std::endl;
         is_open_ = false;
         return false;
     }
@@ -40,7 +42,8 @@ void csv_reader::file_close() {
     is_open_ = false;
 }
 
-std::vector<std::string> csv_reader::split(const std::string& str, char delimiter) {
+std::vector<std::string> csv_reader::split(const std::string& str,
+        char delimiter) {
     std::vector<std::string> tokens;
     std::stringstream ss(str);
     std::string token;

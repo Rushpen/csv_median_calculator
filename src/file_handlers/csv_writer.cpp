@@ -10,7 +10,8 @@ csv_writer::~csv_writer() {
 bool csv_writer::file_open() {
     file_.open(filename_);
     if (!file_.is_open()) {
-        std::cerr << "Не удалось открыть файл для записи: " << filename_ << std::endl;
+        std::cerr << "Не удалось открыть файл для записи: " <<
+            filename_ << std::endl;
         return false;
     }
     

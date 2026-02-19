@@ -14,7 +14,8 @@ private:
     bool matches_mask(const std::string& filename) const;
     
 public:
-    file_scanner(const std::string& directory, const std::vector<std::string>& masks);
+    file_scanner(const std::string& directory, 
+        const std::vector<std::string>& masks);
 
     std::string get_directory() const {return directory_;}
     std::vector<std::string> get_masks() const {return masks_;}
