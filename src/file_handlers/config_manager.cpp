@@ -7,20 +7,45 @@ bool config_manager::parse_command_line(int argc, char* argv[]) {
     try {
         boost::program_options::options_description desc("Использование");
         desc.add_options()
-            ("config,c", boost::program_options::value<std::string>()->
-                required(),
-             "Путь к TOML-файлу конфигурации");
-        
+            ("config", boost::program_options::value<std::string>()->required(), 
+                "Путь к конфигу (--config)")
+            ("cfg", boost::program_options::value<std::string>()->required(), 
+                "Путь к конфигу (-cfg)")
+            ("c", boost::program_options::value<std::string>()->required(), 
+                "Путь к конфигу (-c)")
+            ("conf", boost::program_options::value<std::string>()->required(), 
+                "Путь к конфигу (-conf)");
+                
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::
             parse_command_line(argc, argv, desc), vm);
         
-        boost::program_options::notify(vm);
-        cmd_.config_file = vm["config"].as<std::string>();
+        // Указали конфиг в строке - используем его
+
+        if (vm.count("config")) {
+            cmd_.config_file = vm["config"].as<std::string>();
+        } else if (vm.count("cfg")) {
+            cmd_.config_file = vm["cfg"].as<std::string>();
+        } else if (vm.count("c")) {
+            cmd_.config_file = vm["c"].as<std::string>();
+        } else if (vm.count("conf")) {
+            cmd_.config_file = vm["conf"].as<std::string>();
+        } else {
+            // Если ничего не указано - используем значение по умолчанию
+            cmd_.config_file = "./config.toml";
+            spdlog::warn("Предупреждение: используем конфиг по{}", 
+                        cmd_.config_file);
+        }
+        
+        // Проверяем, существует ли файл
+        if (!std::filesystem::exists(cmd_.config_file)) {
+            spdlog::warn("Предупреждение: Файл конфигурации не найден: {}", 
+                cmd_.config_file);
+        }
         return true;
         
     } catch (const boost::program_options::error& e) {
-        spdlog::error("Ошибка парсинга аргументов: {}", e.what());
+        spdlog::error("Ошибка: парсинг аргументов не удался: {}", e.what());
         cmd_.error = true;
         return false;
     }
@@ -58,7 +83,8 @@ bool config_manager::parse_toml_file(const std::string& filename) {
         return true;
         
     } catch (const toml::parse_error& error) {
-        spdlog::error("Ошибка парсинга TOML: {}", error.description());
+        spdlog::error("Ошибка: парсинг TOML-файла не удался: {}", 
+            error.description());
         return false;
     }
 }
@@ -66,13 +92,13 @@ bool config_manager::parse_toml_file(const std::string& filename) {
 bool config_manager::validate_and_create_output_dir() {
     try {
         if (!std::filesystem::exists(config_.input_dir_)) {
-            spdlog::error("Входная директория не существует: {}",
+            spdlog::error("Ошибка: Входная директория не существует: {}",
                 config_.input_dir_);
             return false;
         }
         
         if (!std::filesystem::is_directory(config_.input_dir_)) {
-            spdlog::error("Указанный путь не является директорией: ",
+            spdlog::error("Ошибка: Указанный путь не является директорией: ",
                 config_.input_dir_);
             return false;
         }
@@ -84,7 +110,7 @@ bool config_manager::validate_and_create_output_dir() {
                 spdlog::info("Создана выходная директория: {}", 
                     config_.output_dir_);
             } else {
-                spdlog::error("Не удалось создать выходную директорию: ",
+                spdlog::error("Ошибка: Не удалось создать выходную дир.-рию: ",
                     config_.output_dir_);
                 return false;
             }

@@ -14,7 +14,8 @@ bool csv_reader::file_open() {
     
     file_.open(filename_);
     if (!file_.is_open()) {
-        spdlog::error("Ошибка: проблема при попытке открытия файла {}", filename_);
+        spdlog::error("Ошибка: проблема при попытке открытия файла {}",
+            filename_);
         is_open_ = false;
         return false;
     }

@@ -17,7 +17,7 @@ void data_manager::sort_by_timestamp() {
 
 void data_manager::print_n_records(size_t n) {
     sort_by_timestamp();
-    for (int i = 0; i < std::min(n, records_.size()); i++){
+    for (size_t i = 0; i < std::min(n, records_.size()); i++){
         spdlog::trace("{}  {}", records_[i].timestamp, records_[i].price);
     }
 }

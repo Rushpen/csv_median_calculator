@@ -57,7 +57,8 @@ std::vector<std::filesystem::path> file_scanner::scan_files() const {
     }
 
     catch(const std::filesystem::filesystem_error& error) {
-        spdlog::error("Ошибка при сканировании файлов {}", error.what());
+        spdlog::error("Ошибка: сканирование файлов не удалось: {}",
+            error.what());
     }
 
     return result;

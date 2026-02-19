@@ -52,7 +52,16 @@ configure_file(
 
 option(BUILD_TESTS "Собрать тесты" OFF)
 
+
 if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
+endif()
+
+option(ENABLE_ASAN "Включить AddressSanitizer" OFF)
+
+# AddressSanitizer
+if(ENABLE_ASAN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
 endif()

@@ -16,7 +16,7 @@ bool main_application::initialize(int argc, char* argv[]) {
 
     // Проверяем на ошибки
     if (config_->has_error()) {
-        spdlog::error("Ошибка загрузки конфигурации");
+        spdlog::error("Ошибка: неудачная загрузка конфигурации");
         return false;
     }
     
@@ -51,7 +51,7 @@ bool main_application::scan_and_read_files() {
     auto files = scanner.scan_files();
     
     if (files.empty()) {
-        spdlog::error("Не найдено CSV файлов");
+        spdlog::error("Ошибка: Не найдено CSV файлов");
         return false;
     }
     
@@ -66,7 +66,8 @@ bool main_application::scan_and_read_files() {
         
         csv_reader reader(file.string());
         if (!reader.file_open()) {
-            spdlog::error("Не удалось открыть");
+            spdlog::error("Ошибка: Не удалось открыть файл {}", 
+                file.filename().string());
             continue;
         }
         
@@ -78,7 +79,7 @@ bool main_application::scan_and_read_files() {
         }
         
         if (ts_idx == -1 || price_idx == -1) {
-            spdlog::warn("Пропущено: нет колонок receive_ts/price");
+            spdlog::warn("Предупреждение: нет колонок receive_ts/price");
             continue;
         }
         
@@ -92,7 +93,7 @@ bool main_application::scan_and_read_files() {
                 count++;
             } 
             catch (const std::exception& err) {
-                spdlog::error("\nОшибка парсинга: {}", err.what());
+                spdlog::error("\nОшибка: неудача парсинга: {}", err.what());
             }
         }
         
@@ -109,7 +110,7 @@ bool main_application::scan_and_read_files() {
 
 bool main_application::calculate_and_write_results() {
     if (!writer_->file_open()) {
-        spdlog::error("Не удалось создать выходной файл");
+        spdlog::error("Ошибка: Не удалось создать выходной файл");
         return false;
     }
     

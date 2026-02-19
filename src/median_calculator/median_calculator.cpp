@@ -3,7 +3,7 @@
 median_calculator::median_calculator() :
     last_median_(0.0), is_first_(true) {}
 
-median_calculator::~median_calculator = default;
+median_calculator::~median_calculator() = default;
 
 void median_calculator::add_price(double price) {
     median_accumulator_(price);
